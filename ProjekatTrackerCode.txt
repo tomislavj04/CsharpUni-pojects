@@ -1,0 +1,223 @@
+using System;
+using System.Collections.Generic;
+
+public abstract class MagacinItem
+{
+    protected string ime;
+    protected string boja;
+    protected int broj;
+
+
+    public MagacinItem(string ime, string boja, int broj)
+    {
+        this.ime = ime;
+        this.boja = boja;
+        this.broj = broj;
+    }
+
+    public void DodajUMagacin()
+    {
+        Console.WriteLine($"Dodat je {broj} komada {ime} u magacin.");
+    }
+
+    public abstract void Potrosio(string ime, int broj);
+
+    public abstract void Prikazi();
+}
+
+
+
+
+public class Sos : MagacinItem
+{
+    private string ukus;
+    private static Dictionary<string, DateTime> sekundarniRok = new Dictionary<string, DateTime>();
+
+
+    public Sos(string ime, string boja, int broj, string ukus) : base(ime, boja, broj)
+    {
+        this.ukus = ukus;
+    }
+
+
+    public void NalepiSekundarniRok(string ime, DateTime datum)
+    {
+        sekundarniRok[ime] = datum;
+    }
+
+    public void IspisRoka()
+    {
+        foreach (var kvp in sekundarniRok)
+        {
+            Console.WriteLine($"Sos {kvp.Key} ima sekundarni rok do {kvp.Value.ToShortDateString()}.");
+        }
+    }
+
+
+
+    public override void Potrosio(string ime, int broj)
+    {
+        if (sekundarniRok.ContainsKey(ime))
+        {
+            if (broj <= this.broj)
+            {
+                this.broj -= broj;
+                Console.WriteLine($"Potrošeno je {broj} komada sosa {ime}.");
+            }
+            else
+            {
+                Console.WriteLine($"Nema dovoljno sosa {ime} u magacinu.");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Sos {ime} nije pronađen u magacinu.");
+        }
+    }
+
+    public override void Prikazi()
+    {
+        Console.WriteLine($"U magacinu se nalazi {broj} komada sosa {ime}, boje {boja} i  ukusa {ukus}.");
+    }
+}
+
+public class Salata : MagacinItem
+{
+    public bool ObrokSalata { get; set; }
+
+    public Salata(string ime, string boja, int broj, bool obrokSalata) : base(ime, boja, broj)
+    {
+        ObrokSalata = obrokSalata;
+    }
+
+    public override void Potrosio(string ime, int broj)
+    {
+        if (broj <= this.broj)
+        {
+            this.broj -= broj;
+            Console.WriteLine($"Potrošeno je {broj} komada salate {ime}.");
+        }
+        else
+        {
+            Console.WriteLine($"Nema dovoljno salate {ime} u magacinu.");
+        }
+    }
+
+    public override void Prikazi()
+    {
+        Console.WriteLine($"U magacinu se nalazi {broj} komada salate {ime}, boje {boja}, obrok salata: {ObrokSalata}.");
+    }
+}
+
+public class Meso : MagacinItem
+{
+    private string tekstura;
+
+    public Meso(string ime, string boja, int broj, string tekstura) : base(ime, boja, broj)
+    {
+        this.tekstura = tekstura;
+    }
+
+    public override void Potrosio(string ime, int broj)
+    {
+        if (broj <= this.broj)
+        {
+            this.broj -= broj;
+            Console.WriteLine($"Potrošeno je {broj} komada mesa {ime}.");
+        }
+        else
+        {
+            Console.WriteLine($"Nema dovoljno mesa {ime} u magacinu.");
+        }
+    }
+
+    public override void Prikazi()
+    {
+        Console.WriteLine($"U magacinu se nalazi {broj} komada mesa {ime}, boje {boja}, teksture {tekstura}.");
+    }
+}
+
+public class Sir : MagacinItem
+{
+    public Sir(string ime, string boja, int broj) : base(ime, boja, broj)
+    {
+    }
+
+    public override void Potrosio(string ime, int broj)
+    {
+        if (broj <= this.broj)
+        {
+            this.broj -= broj;
+            Console.WriteLine($"Potrošeno je {broj} komada sira {ime}.");
+        }
+        else
+        {
+            Console.WriteLine($"Nema dovoljno sira {ime} u magacinu.");
+        }
+    }
+
+    public override void Prikazi()
+    {
+        Console.WriteLine($"U magacinu se nalazi {broj} komada sira {ime}, boje {boja}.");
+    }
+}
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        Sos mcbacon = new Sos("McBacon", "crven", 6, "slan");
+        Sos tasty = new Sos("Big tasty", "oker", 10, "slano-kisekalkst");
+        Sos mex = new Sos("Mexican sos", "braon", 3, "ljut"); ;
+
+        Salata ice = new Salata("Iceberg", "svetlo-zelena", 18, false);
+        Salata kk = new Salata("Kiseli krastavci", "zelena", 35, false);
+        Salata cez = new Salata("Pohovani cezar", "sarena", 14, true);
+
+        Meso m1 = new Meso("McCrispy", "bela", 15, "hrskav");
+        Sir sir = new Sir("Gauda", "žuta", 8);
+
+        mcbacon.DodajUMagacin();
+        tasty.DodajUMagacin();
+        mex.DodajUMagacin();
+
+        ice.DodajUMagacin();
+        kk.DodajUMagacin(); 
+        cez.DodajUMagacin();
+        m1.DodajUMagacin();
+        sir.DodajUMagacin();
+
+        Console.WriteLine();
+
+        mcbacon.Prikazi();
+        tasty.Prikazi();
+        mex.Prikazi();
+        ice.Prikazi();
+        kk.Prikazi();
+        cez.Prikazi();
+        m1.Prikazi();
+        sir.Prikazi();
+
+        Console.WriteLine();
+        Console.WriteLine();
+
+
+        mcbacon.Potrosio("McBacon", 4);
+        ice.Potrosio("Iceberg", 10);
+        sir.Potrosio("Gauda", 3);
+        m1.Potrosio("McCrispy", 6);
+
+        Console.WriteLine();
+        Console.WriteLine();
+
+
+        mcbacon.Prikazi();
+        tasty.Prikazi();
+        mex.Prikazi();
+        ice.Prikazi();
+        kk.Prikazi();
+        cez.Prikazi();
+        m1.Prikazi();
+        sir.Prikazi();
+    }
+}

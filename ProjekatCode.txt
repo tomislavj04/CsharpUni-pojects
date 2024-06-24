@@ -1,0 +1,121 @@
+// See https://aka.ms/new-console-template for more information
+using System.ComponentModel.Design;
+using System.Globalization;
+using System.Net;
+using System;
+
+
+class Program
+{
+    static void Main()
+    {
+
+        start:
+
+        try
+        {
+            int vrste, kolone;
+            
+
+            do
+            {
+                Console.Write("\nUnesite broj vrsti matrice: ");
+                vrste = Convert.ToInt32(Console.ReadLine());
+
+                Console.Write("Unesite broj kolona matrice: ");
+                kolone = Convert.ToInt32(Console.ReadLine());
+
+                 
+
+                if (vrste <= 0 || kolone <= 0)
+                {
+                    Console.WriteLine("Da bi matrica postojala, broj kolona i vrsti mora biti P O Z I T I V A N. \nZar to niste učili iz matematike :_(  ??? \nHajde ponovo.");
+                }
+
+            } while (vrste <= 0 || kolone <= 0);
+
+            int[,] matrica = KreirajMatricu(vrste, kolone);
+
+            IspisiMatricu(matrica);
+
+            if (JeKvadratnaMatrica(matrica))
+            {
+                int[,] kvadratnaMatrica = KvadratnaMatrica(matrica);
+                Console.WriteLine("\nKvadratna matrica:");
+
+                IspisiMatricu(kvadratnaMatrica);
+            }
+            else
+            {
+                Console.WriteLine("\nNe možeš kvadrirati matricu koja nije istih dimenzija. Sledeci put pazi na matematici pa ćeš znati šta ti pričam");
+            }
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Niste uneli broj, zar je teško uneti celi broj?");
+            goto start;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Došlo je do greške: " + ex.Message);
+        }
+    }
+
+    static int[,] KreirajMatricu(int vrste, int kolone)
+    {   
+        
+
+        int[,] matrica = new int[vrste, kolone];
+        int broj;
+
+        for (int i = 0; i < vrste; i++)
+        {
+            for (int j = 0; j < kolone; j++)
+            {
+                Console.Write($"Unesite broj koji se nalazi {i + 1}. vrsti, i u {j + 1}. koloni: ");
+                broj = Convert.ToInt32(Console.ReadLine());
+                matrica[i, j] = broj;
+            }
+        }
+        
+        return matrica;
+    }
+
+    static void IspisiMatricu(int[,] matrica)
+    {
+        Console.WriteLine("Matrica:");
+
+        for (int i = 0; i < matrica.GetLength(0); i++)
+        {
+
+            for (int j = 0; j < matrica.GetLength(1); j++)
+            {
+                Console.Write(matrica[i, j] + "\t");
+            }
+            Console.WriteLine();
+        }
+    }
+    static bool JeKvadratnaMatrica(int[,] matrica)
+    {
+        return matrica.GetLength(0) == matrica.GetLength(1);
+    }
+
+    static int[,] KvadratnaMatrica(int[,] matrica)
+    {
+        int velicina = matrica.GetLength(1);
+        int[,] kvadratnaMatrica = new int[velicina, velicina];
+
+        for (int i = 0; i < velicina; i++)
+        {
+            for (int j = 0; j < velicina; j++)
+            {
+                for (int k = 0; k < velicina; k++)
+                {
+                    kvadratnaMatrica[i, j] += matrica[i, k] * matrica[k, j];
+                }
+            }
+        }
+        
+        return kvadratnaMatrica;
+    }
+}
